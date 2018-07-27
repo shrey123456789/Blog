@@ -11,17 +11,23 @@
 |
 */
 
+Route::group(['middleware'=>'auth'],function (){
+// Article CRUD
+
+    Route::resource('articles','ArticleController');
+});
+
+Route::group(['prefix' => 'admin', 'middleware'=>'auth'], function () {
+    // Matches The "/admin/users" URL
+    Route::resource('articles','Admin\ArticleController');
+});
+
+Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/add', function () {
-    return view('addArticle');
-});
 
-Route::post('/post', 'ArticleController@post')->name('postArticle');
-
-Route::get('/view', 'ArticleController@view');
+// Authentication
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('logout','Auth\LoginController@logout');
